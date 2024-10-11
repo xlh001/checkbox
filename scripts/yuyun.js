@@ -8,7 +8,7 @@ https://www.rainyun.cc/
 */
 
 const axios = require("axios");
-
+let result = "【云雨】：";
 class RainYun {
   constructor(token) {
     this.token = token;
@@ -33,12 +33,12 @@ class RainYun {
   async request(method, url, data = {}) {
     try {
       const res = await this.session({ method, url, data });
-      console.log(res);
+      // console.log(res);
       if (res.status === 200) return res;
       console.error(`请求失败: ${method.toUpperCase()} ${url}`);
     } catch (error) {
-      console.log(error.response);
-      // console.error(`请求出错: ${method.toUpperCase()} ${url}`, error.message);
+      // console.log(error.response);
+      console.error(`请求出错: ${method.toUpperCase()} ${url}`, error.message);
     }
     return null;
   }
@@ -60,24 +60,25 @@ class RainYun {
     if (res) {
       this.points = res.data.data.Points || res.data.data.points;
       console.log("积分查询成功，积分为", this.points);
+      result += "当前积分: " + this.points;
     }
   }
 }
 
 async function yuyun() {
   const tokens = config.yunyu.token;
+
   if (!tokens) {
     console.error("❌未添加 YUYUN_token 变量");
     return;
   }
 
   for (const token of tokens) {
-    console.log(token);
     const ry = new RainYun(token);
     await ry.signin();
-    // await ry.query();
-    // await ry.logout();
+    await ry.query();
   }
+  return result;
 }
 
 module.exports = yuyun;
