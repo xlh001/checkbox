@@ -65,20 +65,22 @@ class RainYun {
   }
 }
 
-async function yuyun() {
-  const tokens = config.yunyu.token;
+function yuyun() {
+  return new Promise(async (resolve) => {
+    const tokens = config.yunyu.token;
 
-  if (!tokens) {
-    console.error("❌未添加 YUYUN_token 变量");
-    return;
-  }
+    if (!tokens) {
+      console.error("❌未添加 YUYUN_token 变量");
+      return;
+    }
 
-  for (const token of tokens) {
-    const ry = new RainYun(token);
-    await ry.signin();
-    await ry.query();
-  }
-  return result;
+    for (const token of tokens) {
+      const ry = new RainYun(token);
+      await ry.signin();
+      await ry.query();
+    }
+    resolve(result);
+  });
 }
 
 module.exports = yuyun;
